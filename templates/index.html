@@ -1,0 +1,72 @@
+$def with (run_data)
+
+$def render_options(option_list, default_option):
+    $if option_list in run_data:
+        $if default_option not in run_data or run_data[default_option] not in run_data[option_list]:
+            <option hidden disabled selected></option>
+        $for option in run_data[option_list]:
+            $if default_option in run_data and run_data[default_option] == option:
+                <option value="$option" selected="selected">$option</option>
+            $else:
+                <option value="$option">$option</option>
+
+$:global_render.header('Plot Interface', 'Plot readability scores of pubmed documents over a chosen column', run_data)
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <h2>Input</h2>
+      <form method="POST">
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <label for="inputSchema">Select schema</label>
+          </div>
+          <div class="col-sm-8">
+            <select class="form-control" id="inputSchema" name="schema" onchange="this.form.submit();">
+              $:render_options('schema_list', 'schema')
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <label for="inputTable">Select table</label>
+          </div>
+          <div class="col-sm-8">
+            <select class="form-control" id="inputTable" name="table" onchange="this.form.submit();">
+              $:render_options('table_list', 'table')
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <label for="inputIndexColumn">Select index column</label>
+          </div>
+          <div class="col-sm-8">
+            <select class="form-control" id="inputIndexColumn" name="index_column">
+              $:render_options('column_list', 'index_column')
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <label for="inputPlotColumn">Select plot column</label>
+          </div>
+          <div class="col-sm-8">
+            <select class="form-control" id="inputPlotColumn" name="plot_column">
+              $:render_options('column_list', 'plot_column')
+            </select>
+          </div>
+        </div>
+        <button type="submit" name="submitted" value="True" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    $if 'submitted' in run_data and run_data['submitted']:
+        <div class="col-sm-6">
+          <h2>Results</h2>
+          $if 'plot_path' in run_data:
+              <img src="$run_data['plot_path']" class="img-fluid" alt="Results Plot">
+        </div>
+    <div class="col-sm-6">
+      
+    </div>
+  </div>
+</div>

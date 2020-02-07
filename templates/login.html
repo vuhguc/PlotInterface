@@ -1,0 +1,21 @@
+$def with (run_data)
+
+$:global_render.header('Login', 'Log in to iCDCU Database', run_data)
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 offset-sm-4">
+      <form method="POST">
+        <h2>Login</h2>
+        <div class="form-group row">
+          <label for="inputUsername">Username</label>
+          <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username">
+        </div>
+        <div class="form-group row">
+          <label for="inputPassword">Password</label>
+          <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-primary">Log in</button>
+      </form>
+    </div>
+  </div>
+</div>
