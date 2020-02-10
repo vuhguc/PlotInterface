@@ -15,45 +15,70 @@ $:global_render.header('Plot Interface', 'Plot readability scores of pubmed docu
   <div class="row">
     <div class="col-sm-6">
       <h2>Input</h2>
-      <form method="POST">
+      <form method="POST" enctype="multipart/form-data">
         <div class="form-group row">
           <div class="col-sm-4">
-            <label for="inputSchema">Select schema</label>
+            <label class="col-form-label">Select input mode</label>
           </div>
-          <div class="col-sm-8">
-            <select class="form-control" id="inputSchema" name="schema" onchange="this.form.submit();">
-              $:render_options('schema_list', 'schema')
-            </select>
+          <div class="col-sm-3">
+            <input type="radio" class="form-check-input" id="inputModeUI" name="input_mode" value="UI" onclick="toggleInputMode()">
+            <label for="inputModeUI" class="form-check-label">UI</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" class="form-check-input" id="inputModeSQL" name="input_mode" value="SQL" onclick="toggleInputMode()">
+            <label for "inputModeSQL" class="form-check-label">Upload SQL</label>
           </div>
         </div>
-        <div class="form-group row">
-          <div class="col-sm-4">
-            <label for="inputTable">Select table</label>
+        <div id="inputUIBlock" hidden>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label for="inputSchema" class="col-form-label">Select schema</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="form-control" id="inputSchema" name="schema" onchange="this.form.submit();">
+                $:render_options('schema_list', 'schema')
+              </select>
+            </div>
           </div>
-          <div class="col-sm-8">
-            <select class="form-control" id="inputTable" name="table" onchange="this.form.submit();">
-              $:render_options('table_list', 'table')
-            </select>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label for="inputTable" class="col-form-label">Select table</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="form-control" id="inputTable" name="table" onchange="this.form.submit();">
+                $:render_options('table_list', 'table')
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label for="inputIndexColumn" class="col-form-label">Select index column</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="form-control" id="inputIndexColumn" name="index_column">
+                $:render_options('column_list', 'index_column')
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label for="inputPlotColumn" class="col-form-label">Select plot column</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="form-control" id="inputPlotColumn" name="plot_column">
+                $:render_options('column_list', 'plot_column')
+              </select>
+            </div>
           </div>
         </div>
-        <div class="form-group row">
-          <div class="col-sm-4">
-            <label for="inputIndexColumn">Select index column</label>
-          </div>
-          <div class="col-sm-8">
-            <select class="form-control" id="inputIndexColumn" name="index_column">
-              $:render_options('column_list', 'index_column')
-            </select>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-4">
-            <label for="inputPlotColumn">Select plot column</label>
-          </div>
-          <div class="col-sm-8">
-            <select class="form-control" id="inputPlotColumn" name="plot_column">
-              $:render_options('column_list', 'plot_column')
-            </select>
+        <div id="inputSQLBlock" hidden>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label for="inputSQLFile" class="col-form-label">Upload SQL file</label>
+            </div>
+            <div class="col-sm-8">
+              <input type="file" class="form-control-file" accept=".sql" id="inputSQLFile" name="sql_file">
+            </div>
           </div>
         </div>
         <button type="submit" name="submitted" value="True" class="btn btn-primary">Submit</button>
@@ -65,8 +90,23 @@ $:global_render.header('Plot Interface', 'Plot readability scores of pubmed docu
           $if 'plot_path' in run_data:
               <img src="$run_data['plot_path']" class="img-fluid" alt="Results Plot">
         </div>
-    <div class="col-sm-6">
-      
-    </div>
   </div>
 </div>
+
+<script>
+function toggleInputMode() {
+  if(document.getElementById("inputModeUI").checked) {
+    document.getElementById("inputUIBlock").hidden = false;
+    document.getElementById("inputSQLBlock").hidden = true;
+  }
+  else if(document.getElementById("inputModeSQL").checked) {
+    document.getElementById("inputUIBlock").hidden = true;
+    document.getElementById("inputSQLBlock").hidden = false;
+  }
+}
+
+$if 'input_mode' in run_data and run_data['input_mode'] == 'SQL':
+    document.getElementById("inputModeSQL").click();
+$else:
+    document.getElementById("inputModeUI").click();
+</script>

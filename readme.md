@@ -1,1 +1,3 @@
-Run: python3 main.py
+#Plot Interface
+##Run
+    python3 main.py

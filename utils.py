@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import os
 
 
 
@@ -15,6 +16,11 @@ def test_db_connection(db_path):
     engine = sa.create_engine(db_path)
     con = engine.connect()
     con.close()
+
+
+
+def remove_file(file_path):
+    os.remove(file_path)
 
 
 
@@ -43,12 +49,17 @@ def get_column_list(db_path, schema, table):
 
 
 
-def read_formatted_sql_file(file_path, replacements):
+def read_formatted_file(file_path, replacements):
     with open(file_path, 'r') as sql_file:
         sql_statement = sql_file.read()
         for wild_card in replacements:
             sql_statement = sql_statement.replace('{{%{}}}'.format(wild_card), replacements[wild_card])
         return sql_statement
+
+
+
+def bytes_to_string(bytes_data):
+    return bytes_data.decode('utf-8')
 
 
 

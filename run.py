@@ -22,25 +22,27 @@ def run_main(input_data, run_data, session):
 
     if 'submitted' in input_data and input_data['submitted'] == 'True':
         # try:
-            if 'schema' not in run_data or 'table' not in run_data or 'index_column' not in run_data or 'plot_column' not in run_data:
-                raise Exception()
-            sql_statement = read_formatted_sql_file(
-                file_path=GET_XY_SQL_FILE_PATH,
-                replacements={
-                    'schema':run_data['schema'],
-                    'table':run_data['table'],
-                    'index_column':run_data['index_column'],
-                    'plot_column':run_data['plot_column']
-                }
-            )
+            run_data['input_mode'] = input_data['input_mode']
+            if input_data['input_mode'] == 'UI':
+                sql_statement = read_formatted_file(
+                    file_path=GET_XY_SQL_FILE_PATH,
+                    replacements={
+                        'schema':run_data['schema'],
+                        'table':run_data['table'],
+                        'index_column':run_data['index_column'],
+                        'plot_column':run_data['plot_column']
+                    }
+                )
+            else:
+                sql_statement = bytes_to_string(bytes_data=input_data['sql_file'])
             df = execute_sql_statement(db_path=db_path, sql_statement=sql_statement)
             plot_path = PLOT_PATH.format(session.session_id)
             generate_plot(
                 df=df,
                 plot_path=plot_path,
-                xlabel='{}.{}.{}'.format(run_data['schema'], run_data['table'], run_data['plot_column']),
+                xlabel='Plot Column',
                 ylabel='Readability Score',
-                title='Readability Score over {}.{}.{}'.format(run_data['schema'], run_data['table'], run_data['plot_column'])
+                title='Readability Score over Plot Column'
             )
             run_data['submitted'] = 'True'
             run_data['plot_path'] = plot_path
@@ -66,3 +68,13 @@ def run_login(input_data, run_data, session):
         session.username = ''
         session.password = ''
         run_data['status_messages'] = [{'status':'failure', 'message':'Failure! Cannot connect to the database with given username and password.'}]
+
+
+
+def run_logout(input_data, run_data, session):
+    try:
+        plot_path = PLOT_PATH.format(session.session_id)
+        remove_file(file_path=plot_path)
+    except:
+        pass
+    session.kill()

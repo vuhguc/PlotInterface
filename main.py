@@ -62,7 +62,9 @@ class Login:
 
 class Logout:
     def GET(self):
-        session.kill()
+        input_data = web.input()
+        run_data = {}
+        run_logout(input_data, run_data, session)
         raise web.seeother('/')
 
 
