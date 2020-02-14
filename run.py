@@ -56,7 +56,7 @@ def run_main(input_data, run_data, session):
             run_data['plot_path'] = plot_path
 
         except Exception as e:
-            run_data['status_messages'] = [{'status':'failure', 'message':'Failure! Cannot process input information.'}]
+            run_data['status_messages'] = [{'status':'failure', 'message':'Failure! Cannot process input information.' + str(e)}]
 
 
 

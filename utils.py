@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 import pandas as pd
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -73,6 +74,9 @@ def execute_sql_statement(db_path, sql_statement):
 def generate_plot(plot_type, df, plot_path, xlabel, ylabel, title):
     if plot_type == 'scatter':
         ax = df.plot.scatter(x='x', y='y', s=3)
+        coefs = np.polyfit(x=df['x'], y=df['y'], deg=1)
+        poly = np.poly1d(coefs)
+        ax.plot(df['x'], poly(df['x']), color='red')
     elif plot_type== 'box':
         ax = df.boxplot(column='y', by='x')
     else:
