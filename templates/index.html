@@ -70,6 +70,22 @@ $:global_render.header('Plot Interface', 'Plot readability scores of pubmed docu
               </select>
             </div>
           </div>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label class="col-form-label">Limit readability score</label>
+            </div>
+            <div class="col-sm-3">
+              <input type="radio" class="form-check-input" id="inputLimitReadabilityFalse" name="limit_readability" value="False" onclick=toggleInputLimitReadability()>
+              <label for="inputLimitReadabilityFalse" class="form-check-label">No limit</label>
+            </div>
+            <div class="col-sm-3">
+              <input type="radio" class="form-check-input" id="inputLimitReadabilityTrue" name="limit_readability" value="True" onclick=toggleInputLimitReadability()>
+              <label for="inputLimitReadabilityTrue" class="form-check-label">Limit: not exceeding</label>
+            </div>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" id="inputMaxReadability" name="max_readability" value="" disabled>
+            </div>
+          </div>
         </div>
         <div id="inputSQLBlock" hidden>
           <div class="form-group row">
@@ -118,6 +134,16 @@ function toggleInputMode() {
   }
 }
 
+function toggleInputLimitReadability() {
+  if(document.getElementById("inputLimitReadabilityFalse").checked) {
+    document.getElementById("inputMaxReadability").disabled = true;
+    document.getElementById("inputMaxReadability").value = "";
+  }
+  else if(document.getElementById("inputLimitReadabilityTrue").checked) {
+    document.getElementById("inputMaxReadability").disabled = false;
+  }
+}
+
 $if 'input_mode' in run_data and run_data['input_mode'] == 'SQL':
     document.getElementById("inputModeSQL").click();
 $else:
@@ -126,4 +152,9 @@ $if 'plot_type' in run_data and run_data['plot_type'] == 'box':
     document.getElementById("inputPlotTypeBox").click();
 $else:
     document.getElementById("inputPlotTypeScatter").click();
+$if 'limit_readability' in run_data and run_data['limit_readability'] and 'max_readability' in run_data:
+    document.getElementById("inputLimitReadabilityTrue").click();
+    document.getElementById("inputMaxReadability").value = $run_data['max_readability'];
+$else:
+    document.getElementById("inputLimitReadabilityFalse").click();
 </script>

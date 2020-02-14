@@ -8,6 +8,10 @@ def run_main(input_data, run_data, session):
 
     if 'input_mode' in input_data:
         run_data['input_mode'] = input_data['input_mode']
+    if 'limit_readability' in input_data:
+        run_data['limit_readability'] = input_data['limit_readability']
+    if 'max_readability' in input_data:
+        run_data['max_readability'] = input_data['max_readability']
     if 'plot_type' in input_data:
         run_data['plot_type'] = input_data['plot_type']
 
@@ -29,13 +33,20 @@ def run_main(input_data, run_data, session):
     if 'submitted' in input_data and input_data['submitted'] == 'True':
         try:
             if run_data['input_mode'] == 'UI':
+                if run_data['limit_readability'] == 'True':
+                    max_readability = float(run_data['max_readability'])
+                elif run_data['limit_readability'] == 'False':
+                    max_readability = DEFAULT_MAX_READABILITY
+                else:
+                    raise Exception()
                 sql_statement = read_formatted_file(
                     file_path=GET_XY_SQL_FILE_PATH,
                     replacements={
                         'schema':run_data['schema'],
                         'table':run_data['table'],
                         'index_column':run_data['index_column'],
-                        'plot_column':run_data['plot_column']
+                        'plot_column':run_data['plot_column'],
+                        'max_readability':str(max_readability)
                     }
                 )
             elif run_data['input_mode'] == 'SQL':
@@ -56,7 +67,7 @@ def run_main(input_data, run_data, session):
             run_data['plot_path'] = plot_path
 
         except Exception as e:
-            run_data['status_messages'] = [{'status':'failure', 'message':'Failure! Cannot process input information.' + str(e)}]
+            run_data['status_messages'] = [{'status':'failure', 'message':'Failure! Cannot process input information.'}]
 
 
 
