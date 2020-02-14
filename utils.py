@@ -70,8 +70,12 @@ def execute_sql_statement(db_path, sql_statement):
 
 
 
-def generate_plot(df, plot_path, xlabel, ylabel, title):
-    fig, ax = plt.subplots()
-    ax.scatter(df['x'], df['y'], marker='.')
+def generate_plot(plot_type, df, plot_path, xlabel, ylabel, title):
+    if plot_type == 'scatter':
+        ax = df.plot.scatter(x='x', y='y', s=3)
+    elif plot_type== 'box':
+        ax = df.boxplot(column='y', by='x')
+    else:
+        raise Exception()
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
-    fig.savefig(plot_path)
+    ax.get_figure().savefig(plot_path)

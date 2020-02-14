@@ -26,7 +26,7 @@ $:global_render.header('Plot Interface', 'Plot readability scores of pubmed docu
           </div>
           <div class="col-sm-3">
             <input type="radio" class="form-check-input" id="inputModeSQL" name="input_mode" value="SQL" onclick="toggleInputMode()">
-            <label for "inputModeSQL" class="form-check-label">Upload SQL</label>
+            <label for="inputModeSQL" class="form-check-label">Upload SQL</label>
           </div>
         </div>
         <div id="inputUIBlock" hidden>
@@ -81,6 +81,19 @@ $:global_render.header('Plot Interface', 'Plot readability scores of pubmed docu
             </div>
           </div>
         </div>
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <label class="col-form-label">Select plot type</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" class="form-check-input" id="inputPlotTypeScatter" name="plot_type" value="scatter">
+            <label for="inputPlotTypeScatter" class="form-check-label">Scatter plot</label>
+          </div>
+          <div class="col-sm-3">
+            <input type="radio" class="form-check-input" id="inputPlotTypeBox" name="plot_type" value="box">
+            <label for="inputPlotTypeBox" class="form-check-label">Box plot</label>
+          </div>
+        </div>
         <button type="submit" name="submitted" value="True" class="btn btn-primary">Submit</button>
       </form>
     </div>
@@ -109,4 +122,8 @@ $if 'input_mode' in run_data and run_data['input_mode'] == 'SQL':
     document.getElementById("inputModeSQL").click();
 $else:
     document.getElementById("inputModeUI").click();
+$if 'plot_type' in run_data and run_data['plot_type'] == 'box':
+    document.getElementById("inputPlotTypeBox").click();
+$else:
+    document.getElementById("inputPlotTypeScatter").click();
 </script>
